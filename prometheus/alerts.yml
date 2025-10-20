@@ -1,0 +1,78 @@
+groups:
+  - name: host_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for more than 2 minutes"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% for more than 2 minutes"
+
+      - alert: DiskSpaceLow
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space is below 10%"
+
+  - name: mysql_alerts
+    rules:
+      - alert: MySQLDown
+        expr: up{job="mysqld_exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MySQL is down"
+          description: "MySQL database has been down for more than 1 minute"
+
+      - alert: HighMySQLConnections
+        expr: mysql_global_status_threads_connected > 50
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High MySQL connections"
+          description: "MySQL connections are above 50"
+
+  - name: application_alerts
+    rules:
+      - alert: AppInstanceDown
+        expr: up{job="app_instances"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Application instance down"
+          description: "An application instance has been down for more than 1 minute"
+
+      - alert: HighRequestLatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High request latency"
+          description: "95th percentile request latency is above 1 second"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate"
+          description: "Error rate is above 5%"

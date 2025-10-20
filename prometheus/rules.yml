@@ -1,0 +1,43 @@
+groups:
+  - name: core_alerts
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance DOWN ({{ $labels.job }} - {{ $labels.instance }})"
+          description: "Target {{ $labels.instance }} (job={{ $labels.job }}) has gone down."
+
+      - alert: HighCPU
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+
+      - alert: MySQLHighConnections
+        expr: mysql_global_status_threads_connected > 50
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MySQL connections high"
+
+      - alert: App5xxErrors
+        expr: increase(app_requests_total{app=~".+"}[5m]) - increase(app_requests_total{app=~".+",status=~"^[23].."}[5m]) > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "App returning many errors"

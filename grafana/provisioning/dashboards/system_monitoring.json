@@ -1,0 +1,226 @@
+{
+    "dashboard": {
+      "id": null,
+      "title": "Sistema de Monitoreo Completo",
+      "tags": ["monitoring", "system"],
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Uso de CPU",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 70},
+                  {"color": "red", "value": 85}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Uso de Memoria",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100",
+              "legendFormat": "Memory Usage"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 70},
+                  {"color": "red", "value": 85}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 3,
+          "title": "Espacio en Disco",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100",
+              "legendFormat": "Disk Usage"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 80},
+                  {"color": "red", "value": 90}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 4,
+          "title": "Conexiones MySQL Activas",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "mysql_global_status_threads_connected",
+              "legendFormat": "Active Connections"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 30},
+                  {"color": "red", "value": 50}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 5,
+          "title": "Latencia de Requests (95th percentile)",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+              "legendFormat": "95th Percentile"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 1},
+                  {"color": "red", "value": 2}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 6,
+          "title": "Requests por Segundo",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(http_requests_total[5m])",
+              "legendFormat": "{{method}} {{endpoint}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps"
+            }
+          }
+        },
+        {
+          "id": 7,
+          "title": "Estado de los Servicios",
+          "type": "table",
+          "targets": [
+            {
+              "expr": "up",
+              "legendFormat": "{{job}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "steps": [
+                  {"color": "red", "value": 0},
+                  {"color": "green", "value": 1}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 8,
+          "title": "Tasa de Error HTTP",
+          "type": "stat",
+          "targets": [
+            {
+              "expr": "rate(http_requests_total{status=~\"5..\"}[5m]) / rate(http_requests_total[5m]) * 100",
+              "legendFormat": "Error Rate"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "thresholds": {
+                "steps": [
+                  {"color": "green", "value": null},
+                  {"color": "yellow", "value": 5},
+                  {"color": "red", "value": 10}
+                ]
+              }
+            }
+          }
+        },
+        {
+          "id": 9,
+          "title": "Tráfico Nginx",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "nginx_http_requests_total",
+              "legendFormat": "Total Requests"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short"
+            }
+          }
+        },
+        {
+          "id": 10,
+          "title": "Uso de Recursos por Contenedor",
+          "type": "bargauge",
+          "targets": [
+            {
+              "expr": "container_memory_usage_bytes{container!=\"\"}",
+              "legendFormat": "{{container}}"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "min": 0,
+              "max": 1000000000
+            }
+          }
+        }
+      ],
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      }
+    }
+  }
