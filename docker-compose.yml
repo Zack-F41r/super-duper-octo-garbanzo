@@ -77,6 +77,8 @@ services:
     container_name: mysqld_exporter
     environment:
       DATA_SOURCE_NAME: appuser:appuserpass@(mysql:3306)/
+    command: 
+      - --no-collect.slave_status
     ports:
       - "9104:9104"
     depends_on:
