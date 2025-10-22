@@ -89,7 +89,8 @@ Para poner en marcha este proyecto, necesitarás tener Docker y Docker Compose (
 ## Contribución
 Las contribuciones son bienvenidas. Por favor, abre un "issue" o envía un "pull request".
 ---------
-PRESENTADO POR:
-Carlos Manrique
-Laura Malagón
-María Medina
+-PRESENTADO POR:
+
+-Carlos Manrique
+-Laura Malagón
+-María Medina
