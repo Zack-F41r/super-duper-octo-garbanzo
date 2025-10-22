@@ -4,7 +4,9 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
-metrics = PrometheusMetrics(app)
+metrics = PrometheusMetrics(app, path='/metrics')
+metrics.info('app_info', 'Application info', version='1.0.0', app=os.getenv('APP_NAME', 'app'))
+
 
 db_config = {
     'host': os.getenv('MYSQL_HOST', 'mysql'),
