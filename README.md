@@ -86,11 +86,10 @@ Para poner en marcha este proyecto, necesitarás tener Docker y Docker Compose (
 -   Navega a la aplicación Flask para interactuar con la gestión de usuarios.
 -   Explora el dashboard de Grafana para visualizar el estado y rendimiento de todos los componentes del sistema.
 
-## Contribución
-Las contribuciones son bienvenidas. Por favor, abre un "issue" o envía un "pull request".
----------
--PRESENTADO POR:
+## PRESENTADO POR:
 
 -Carlos Manrique
+
 -Laura Malagón
+
 -María Medina
