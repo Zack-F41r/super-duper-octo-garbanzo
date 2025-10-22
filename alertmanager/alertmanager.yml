@@ -1,18 +1,18 @@
 global:
   smtp_smarthost: 'smtp.gmail.com:587'
-  smtp_from: 'tu-mail@gmail.com'
-  smtp_auth_username: 'tu-mail@gmail.com'
-  smtp_auth_password: 'TU_APP_PASSWORD'
+  smtp_from: 'lauris142003@gmail.com'
+  smtp_auth_username: 'lauris142003@gmail.com'
+  smtp_auth_password: 'amat bbsy acyr tktb'
 
 route:
   group_by: ['alertname']
   group_wait: 30s
   group_interval: 5m
   repeat_interval: 3h
-  receiver: 'team-email'
+  receiver: 'correo-configuraciones'
 
 receivers:
-  - name: 'team-email'
+  - name: 'correo-configuraciones'
     email_configs:
-      - to: 'destino@ejemplo.com'
+      - to: 'lauris142003@gmail.com'
         send_resolved: true
